@@ -19,7 +19,6 @@ C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\bin\Debug\net6.0-wi
 C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\bin\Debug\net6.0-windows\GEOWALL-E.runtimeconfig.json
 C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\bin\Debug\net6.0-windows\GEOWALL-E.dll
 C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\bin\Debug\net6.0-windows\GEOWALL-E.pdb
-C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL_E.Form1.resources
 C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL-E.csproj.GenerateResource.cache
 C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL-E.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL-E.AssemblyInfoInputs.cache
@@ -30,3 +29,5 @@ C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-wi
 C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL-E.pdb
 C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL-E.genruntimeconfig.cache
 C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\ref\GEOWALL-E.dll
+C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL_E.GEOWALL_E.resources
+C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL_E.Properties.Resources.resources
