@@ -24,7 +24,7 @@ namespace GEOWALL_E
             this.FlatStyle = FlatStyle.Flat;
             this.FlatAppearance.BorderSize = 0;
             this.Size = new Size(150, 40);
-            this.BackColor = Color.Gray;
+            this.BackColor = Color.Red;
             this.ForeColor = Color.White;
         }
 

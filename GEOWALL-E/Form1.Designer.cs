@@ -34,9 +34,9 @@
             IMAGEN_WALL_E_NOMBRE = new Label();
             WALLE_E_NOMBRE = new Label();
             IMAGEN_WALLE = new Label();
-            DIBUJAR = new Boton_personalizado();
-            IMPORTAR = new Boton_personalizado();
-            GUARDAR_FUNCIONES = new Boton_personalizado();
+            DRAW = new Boton_personalizado();
+            IMPORT = new Boton_personalizado();
+            SAVE = new Boton_personalizado();
             ((System.ComponentModel.ISupportInitialize)PANEL_DIBUJO).BeginInit();
             SuspendLayout();
             // 
@@ -91,47 +91,47 @@
             IMAGEN_WALLE.Size = new Size(192, 270);
             IMAGEN_WALLE.TabIndex = 8;
             // 
-            // DIBUJAR
+            // DRAW
             // 
-            DIBUJAR.BackColor = Color.Gray;
-            DIBUJAR.FlatAppearance.BorderSize = 0;
-            DIBUJAR.FlatStyle = FlatStyle.Flat;
-            DIBUJAR.ForeColor = Color.White;
-            DIBUJAR.Location = new Point(375, 674);
-            DIBUJAR.Name = "DIBUJAR";
-            DIBUJAR.Size = new Size(163, 79);
-            DIBUJAR.TabIndex = 9;
-            DIBUJAR.Text = "DRAW";
-            DIBUJAR.UseVisualStyleBackColor = false;
-            DIBUJAR.Click += DIBUJAR_Click;
+            DRAW.BackColor = Color.Red;
+            DRAW.FlatAppearance.BorderSize = 0;
+            DRAW.FlatStyle = FlatStyle.Flat;
+            DRAW.ForeColor = Color.White;
+            DRAW.Location = new Point(349, 683);
+            DRAW.Name = "DRAW";
+            DRAW.Size = new Size(163, 79);
+            DRAW.TabIndex = 9;
+            DRAW.Text = "DRAW";
+            DRAW.UseVisualStyleBackColor = false;
+            DRAW.Click += DRAW_Click;
             // 
-            // IMPORTAR
+            // IMPORT
             // 
-            IMPORTAR.BackColor = Color.Gray;
-            IMPORTAR.FlatAppearance.BorderSize = 0;
-            IMPORTAR.FlatStyle = FlatStyle.Flat;
-            IMPORTAR.ForeColor = Color.White;
-            IMPORTAR.Location = new Point(375, 771);
-            IMPORTAR.Name = "IMPORTAR";
-            IMPORTAR.Size = new Size(163, 79);
-            IMPORTAR.TabIndex = 10;
-            IMPORTAR.Text = "IMPORT";
-            IMPORTAR.UseVisualStyleBackColor = false;
-            IMPORTAR.Click += IMPORTAR_Click;
+            IMPORT.BackColor = Color.Red;
+            IMPORT.FlatAppearance.BorderSize = 0;
+            IMPORT.FlatStyle = FlatStyle.Flat;
+            IMPORT.ForeColor = Color.White;
+            IMPORT.Location = new Point(349, 768);
+            IMPORT.Name = "IMPORT";
+            IMPORT.Size = new Size(163, 79);
+            IMPORT.TabIndex = 10;
+            IMPORT.Text = "IMPORT";
+            IMPORT.UseVisualStyleBackColor = false;
+            IMPORT.Click += IMPORT_Click;
             // 
-            // GUARDAR_FUNCIONES
+            // SAVE
             // 
-            GUARDAR_FUNCIONES.BackColor = Color.Gray;
-            GUARDAR_FUNCIONES.FlatAppearance.BorderSize = 0;
-            GUARDAR_FUNCIONES.FlatStyle = FlatStyle.Flat;
-            GUARDAR_FUNCIONES.ForeColor = Color.White;
-            GUARDAR_FUNCIONES.Location = new Point(375, 862);
-            GUARDAR_FUNCIONES.Name = "GUARDAR_FUNCIONES";
-            GUARDAR_FUNCIONES.Size = new Size(163, 79);
-            GUARDAR_FUNCIONES.TabIndex = 11;
-            GUARDAR_FUNCIONES.Text = "SAVE";
-            GUARDAR_FUNCIONES.UseVisualStyleBackColor = false;
-            GUARDAR_FUNCIONES.Click += GUARDAR_FUNCIONES_Click;
+            SAVE.BackColor = Color.Red;
+            SAVE.FlatAppearance.BorderSize = 0;
+            SAVE.FlatStyle = FlatStyle.Flat;
+            SAVE.ForeColor = Color.White;
+            SAVE.Location = new Point(349, 853);
+            SAVE.Name = "SAVE";
+            SAVE.Size = new Size(163, 79);
+            SAVE.TabIndex = 11;
+            SAVE.Text = "SAVE";
+            SAVE.UseVisualStyleBackColor = false;
+            SAVE.Click += SAVE_Click;
             // 
             // GEOWALL_E
             // 
@@ -139,9 +139,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(1882, 953);
-            Controls.Add(GUARDAR_FUNCIONES);
-            Controls.Add(IMPORTAR);
-            Controls.Add(DIBUJAR);
+            Controls.Add(SAVE);
+            Controls.Add(IMPORT);
+            Controls.Add(DRAW);
             Controls.Add(IMAGEN_WALLE);
             Controls.Add(WALLE_E_NOMBRE);
             Controls.Add(IMAGEN_WALL_E_NOMBRE);
@@ -161,8 +161,8 @@
         private Label IMAGEN_WALL_E_NOMBRE;
         private Label WALLE_E_NOMBRE;
         private Label IMAGEN_WALLE;
-        private Boton_personalizado DIBUJAR;
-        private Boton_personalizado IMPORTAR;
-        private Boton_personalizado GUARDAR_FUNCIONES;
+        private Boton_personalizado DRAW;
+        private Boton_personalizado IMPORT;
+        private Boton_personalizado SAVE;
     }
 }

@@ -18,17 +18,17 @@ namespace GEOWALL_E
 
         }
 
-        private void DIBUJAR_Click(object sender, EventArgs e)
+        private void DRAW_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void IMPORTAR_Click(object sender, EventArgs e)
+        private void IMPORT_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void GUARDAR_FUNCIONES_Click(object sender, EventArgs e)
+        private void SAVE_Click(object sender, EventArgs e)
         {
 
         }
