@@ -29,67 +29,39 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GEOWALL_E));
-            BTN_ACCION = new Button();
             PANEL_COMANDOS = new TextBox();
             PANEL_DIBUJO = new PictureBox();
-            IMPORTAR = new Button();
-            GUARDADR_FUNCIONES = new Button();
             IMAGEN_WALL_E_NOMBRE = new Label();
             WALLE_E_NOMBRE = new Label();
             IMAGEN_WALLE = new Label();
+            DIBUJAR = new Boton_personalizado();
+            IMPORTAR = new Boton_personalizado();
+            GUARDAR_FUNCIONES = new Boton_personalizado();
             ((System.ComponentModel.ISupportInitialize)PANEL_DIBUJO).BeginInit();
             SuspendLayout();
-            // 
-            // BTN_ACCION
-            // 
-            BTN_ACCION.Location = new Point(359, 671);
-            BTN_ACCION.Name = "BTN_ACCION";
-            BTN_ACCION.Size = new Size(180, 86);
-            BTN_ACCION.TabIndex = 0;
-            BTN_ACCION.Text = "DIBUJAR";
-            BTN_ACCION.UseVisualStyleBackColor = true;
-            BTN_ACCION.Click += BTN_ACCION_Click;
             // 
             // PANEL_COMANDOS
             // 
             PANEL_COMANDOS.BackColor = SystemColors.HighlightText;
+            PANEL_COMANDOS.BorderStyle = BorderStyle.FixedSingle;
             PANEL_COMANDOS.Cursor = Cursors.IBeam;
-            PANEL_COMANDOS.Location = new Point(31, 94);
+            PANEL_COMANDOS.Location = new Point(31, 136);
             PANEL_COMANDOS.Multiline = true;
             PANEL_COMANDOS.Name = "PANEL_COMANDOS";
-            PANEL_COMANDOS.Size = new Size(575, 563);
+            PANEL_COMANDOS.Size = new Size(569, 521);
             PANEL_COMANDOS.TabIndex = 2;
             PANEL_COMANDOS.TextChanged += PANEL_COMANDOS_TextChanged;
             // 
             // PANEL_DIBUJO
             // 
             PANEL_DIBUJO.BackColor = SystemColors.ButtonHighlight;
+            PANEL_DIBUJO.BorderStyle = BorderStyle.FixedSingle;
             PANEL_DIBUJO.Location = new Point(634, 51);
             PANEL_DIBUJO.Name = "PANEL_DIBUJO";
             PANEL_DIBUJO.Size = new Size(1236, 890);
             PANEL_DIBUJO.TabIndex = 3;
             PANEL_DIBUJO.TabStop = false;
             PANEL_DIBUJO.Click += PANEL_DIBUJO_Click;
-            // 
-            // IMPORTAR
-            // 
-            IMPORTAR.Location = new Point(359, 763);
-            IMPORTAR.Name = "IMPORTAR";
-            IMPORTAR.Size = new Size(180, 88);
-            IMPORTAR.TabIndex = 4;
-            IMPORTAR.Text = "IMPORTAR";
-            IMPORTAR.UseVisualStyleBackColor = true;
-            IMPORTAR.Click += IMPORTAR_Click;
-            // 
-            // GUARDADR_FUNCIONES
-            // 
-            GUARDADR_FUNCIONES.Location = new Point(359, 857);
-            GUARDADR_FUNCIONES.Name = "GUARDADR_FUNCIONES";
-            GUARDADR_FUNCIONES.Size = new Size(180, 84);
-            GUARDADR_FUNCIONES.TabIndex = 5;
-            GUARDADR_FUNCIONES.Text = "GUARDAR";
-            GUARDADR_FUNCIONES.UseVisualStyleBackColor = true;
-            GUARDADR_FUNCIONES.Click += GUARDADR_FUNCIONES_Click;
             // 
             // IMAGEN_WALL_E_NOMBRE
             // 
@@ -103,13 +75,12 @@
             // 
             // WALLE_E_NOMBRE
             // 
-            WALLE_E_NOMBRE.BackColor = SystemColors.ActiveCaptionText;
-            WALLE_E_NOMBRE.BorderStyle = BorderStyle.FixedSingle;
+            WALLE_E_NOMBRE.BackColor = SystemColors.ButtonHighlight;
             WALLE_E_NOMBRE.ForeColor = SystemColors.ControlText;
             WALLE_E_NOMBRE.Image = Properties.Resources.walle_nombre;
-            WALLE_E_NOMBRE.Location = new Point(104, 9);
+            WALLE_E_NOMBRE.Location = new Point(83, 27);
             WALLE_E_NOMBRE.Name = "WALLE_E_NOMBRE";
-            WALLE_E_NOMBRE.Size = new Size(416, 63);
+            WALLE_E_NOMBRE.Size = new Size(466, 106);
             WALLE_E_NOMBRE.TabIndex = 7;
             // 
             // IMAGEN_WALLE
@@ -120,20 +91,62 @@
             IMAGEN_WALLE.Size = new Size(192, 270);
             IMAGEN_WALLE.TabIndex = 8;
             // 
+            // DIBUJAR
+            // 
+            DIBUJAR.BackColor = Color.Gray;
+            DIBUJAR.FlatAppearance.BorderSize = 0;
+            DIBUJAR.FlatStyle = FlatStyle.Flat;
+            DIBUJAR.ForeColor = Color.White;
+            DIBUJAR.Location = new Point(375, 674);
+            DIBUJAR.Name = "DIBUJAR";
+            DIBUJAR.Size = new Size(163, 79);
+            DIBUJAR.TabIndex = 9;
+            DIBUJAR.Text = "DRAW";
+            DIBUJAR.UseVisualStyleBackColor = false;
+            DIBUJAR.Click += DIBUJAR_Click;
+            // 
+            // IMPORTAR
+            // 
+            IMPORTAR.BackColor = Color.Gray;
+            IMPORTAR.FlatAppearance.BorderSize = 0;
+            IMPORTAR.FlatStyle = FlatStyle.Flat;
+            IMPORTAR.ForeColor = Color.White;
+            IMPORTAR.Location = new Point(375, 771);
+            IMPORTAR.Name = "IMPORTAR";
+            IMPORTAR.Size = new Size(163, 79);
+            IMPORTAR.TabIndex = 10;
+            IMPORTAR.Text = "IMPORT";
+            IMPORTAR.UseVisualStyleBackColor = false;
+            IMPORTAR.Click += IMPORTAR_Click;
+            // 
+            // GUARDAR_FUNCIONES
+            // 
+            GUARDAR_FUNCIONES.BackColor = Color.Gray;
+            GUARDAR_FUNCIONES.FlatAppearance.BorderSize = 0;
+            GUARDAR_FUNCIONES.FlatStyle = FlatStyle.Flat;
+            GUARDAR_FUNCIONES.ForeColor = Color.White;
+            GUARDAR_FUNCIONES.Location = new Point(375, 862);
+            GUARDAR_FUNCIONES.Name = "GUARDAR_FUNCIONES";
+            GUARDAR_FUNCIONES.Size = new Size(163, 79);
+            GUARDAR_FUNCIONES.TabIndex = 11;
+            GUARDAR_FUNCIONES.Text = "SAVE";
+            GUARDAR_FUNCIONES.UseVisualStyleBackColor = false;
+            GUARDAR_FUNCIONES.Click += GUARDAR_FUNCIONES_Click;
+            // 
             // GEOWALL_E
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.ControlText;
+            BackColor = SystemColors.ButtonHighlight;
             ClientSize = new Size(1882, 953);
+            Controls.Add(GUARDAR_FUNCIONES);
+            Controls.Add(IMPORTAR);
+            Controls.Add(DIBUJAR);
             Controls.Add(IMAGEN_WALLE);
             Controls.Add(WALLE_E_NOMBRE);
             Controls.Add(IMAGEN_WALL_E_NOMBRE);
-            Controls.Add(GUARDADR_FUNCIONES);
-            Controls.Add(IMPORTAR);
             Controls.Add(PANEL_DIBUJO);
             Controls.Add(PANEL_COMANDOS);
-            Controls.Add(BTN_ACCION);
             Name = "GEOWALL_E";
             Text = "GEOWALL-E";
             WindowState = FormWindowState.Maximized;
@@ -143,14 +156,13 @@
         }
 
         #endregion
-
-        private Button BTN_ACCION;
         private TextBox PANEL_COMANDOS;
         private PictureBox PANEL_DIBUJO;
-        private Button IMPORTAR;
-        private Button GUARDADR_FUNCIONES;
         private Label IMAGEN_WALL_E_NOMBRE;
         private Label WALLE_E_NOMBRE;
         private Label IMAGEN_WALLE;
+        private Boton_personalizado DIBUJAR;
+        private Boton_personalizado IMPORTAR;
+        private Boton_personalizado GUARDAR_FUNCIONES;
     }
 }

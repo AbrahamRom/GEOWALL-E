@@ -8,10 +8,6 @@ namespace GEOWALL_E
             InitializeComponent();
         }
 
-        private void BTN_ACCION_Click(object sender, EventArgs h)
-        {
-
-        }
         private void PANEL_COMANDOS_TextChanged(object sender, EventArgs e)
         {
 
@@ -22,12 +18,17 @@ namespace GEOWALL_E
 
         }
 
+        private void DIBUJAR_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void IMPORTAR_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void GUARDADR_FUNCIONES_Click(object sender, EventArgs e)
+        private void GUARDAR_FUNCIONES_Click(object sender, EventArgs e)
         {
 
         }
