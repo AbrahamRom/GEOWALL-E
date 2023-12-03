@@ -42,13 +42,14 @@
             // 
             // PANEL_COMANDOS
             // 
-            PANEL_COMANDOS.BackColor = SystemColors.HighlightText;
+            PANEL_COMANDOS.BackColor = SystemColors.ButtonHighlight;
             PANEL_COMANDOS.BorderStyle = BorderStyle.FixedSingle;
             PANEL_COMANDOS.Cursor = Cursors.IBeam;
-            PANEL_COMANDOS.Location = new Point(31, 136);
+            PANEL_COMANDOS.ForeColor = SystemColors.InactiveBorder;
+            PANEL_COMANDOS.Location = new Point(103, 136);
             PANEL_COMANDOS.Multiline = true;
             PANEL_COMANDOS.Name = "PANEL_COMANDOS";
-            PANEL_COMANDOS.Size = new Size(569, 521);
+            PANEL_COMANDOS.Size = new Size(419, 521);
             PANEL_COMANDOS.TabIndex = 2;
             PANEL_COMANDOS.TextChanged += PANEL_COMANDOS_TextChanged;
             // 
