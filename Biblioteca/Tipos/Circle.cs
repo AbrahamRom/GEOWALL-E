@@ -1,17 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GEOWALL_E
 {
-    class Circle 
+    class Circle:ILugarGeometrico
     {
-        public Circle(string identificador, Points punto, object radio)
+        public Circle(Point centro, Measure radio)
         {
-            Identificador = identificador;
-            Punto = punto;
+            Identificador = "Circunferencia_"+centro.Identificador+radio.Identificador; //nombre por defecto para el ambito local
+            Centro = centro;
             Radio = radio;
         }
-       // public override Tipo_De_Token Tipo => Tipo_De_Token.circle_Expresion;
+      //  public override Tipo_De_Token Tipo => Tipo_De_Token.circle_Expresion;
         public string Identificador { get; }
-        public Points Punto { get; }
-        public object Radio { get; }
+        public Point Centro { get; }
+        public Measure Radio { get; }
     }
 }

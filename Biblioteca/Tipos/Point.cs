@@ -1,17 +1,24 @@
-namespace GEOWALL_E
+﻿namespace GEOWALL_E
 {
-    class Points 
+    public class Point:ILugarGeometrico
     {
-        public Points(string identificador, object componente_x, object componente_y)
+        public Point(string identificador) // constructor de punto para expression tipo "point p1"
         {
             Identificador = identificador;
-            Componente_x = componente_x;
-            Componente_y = componente_y;
-        }
-        //public override Tipo_De_Token Tipo => Tipo_De_Token.point_Expresion;
-        public string Identificador { get; }
-        public object Componente_x { get; }
-        public object Componente_y { get; }
-    }
-}
+            Random rd = new Random();
 
+            Componente_x = rd.Next(1, 100);
+            Componente_y = rd.Next(1, 100);
+        }
+        public Point(double componentex,double componentey)// ctor para expressiones tipo "intersec" donde el punto no es aleatorio
+        {
+            Componente_x=componentex;
+            Componente_y=componentey;
+        }
+        // public override Tipo_De_Token Tipo => Tipo_De_Token.point_Expresion;
+        public string Identificador { get; } // revisar nombres en secuencias
+        public double Componente_x { get; }
+        public double Componente_y { get; }
+    }
+    public interface ILugarGeometrico { }
+}
