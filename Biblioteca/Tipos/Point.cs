@@ -19,6 +19,10 @@
         public string Identificador { get; } // revisar nombres en secuencias
         public double Componente_x { get; }
         public double Componente_y { get; }
+
+        public void Draw() { }
     }
-    public interface ILugarGeometrico { }
+    public interface ILugarGeometrico { 
+     void Draw() { }
+    }
 }

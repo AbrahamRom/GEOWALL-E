@@ -15,8 +15,10 @@ namespace GEOWALL_E
             Radio = radio;
         }
       //  public override Tipo_De_Token Tipo => Tipo_De_Token.circle_Expresion;
-        public string Identificador { get; }
+        public string Identificador { get; set; }
         public Point Centro { get; }
         public Measure Radio { get; }
+
+        public void Draw() { }
     }
 }
