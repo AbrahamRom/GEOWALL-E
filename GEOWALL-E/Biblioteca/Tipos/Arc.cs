@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GEOWALL_E
+{
+    class Arc : ILugarGeometrico  //representa una arco de una circunferencia
+    {
+        public Arc(Circle circle, Point p1, Point p2)
+        {
+            Circle = circle;
+            InicialRay = new Ray(circle.Centro, p1);
+            FinalRay = new Ray(circle.Centro, p2);
+            P1 = p1;
+            P2 = p2;
+            Identificador = "Arc_" + p1.Identificador + p2.Identificador; // identificador por defecto
+        }
+        public string Identificador { get; set; }
+        public Circle Circle { get; }
+        public Ray InicialRay { get; }
+        public Ray FinalRay { get; }
+        public Point P1 { get; }
+        public Point P2 { get; }
+
+        public void Draw() { }
+    }
+}
