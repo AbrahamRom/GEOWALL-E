@@ -8,7 +8,7 @@ namespace GEOWALL_E
 {
     class Arc : ILugarGeometrico  //representa una arco de una circunferencia
     {
-        public Arc(Circle circle, Point p1, Point p2)
+        public Arc(Circle circle, Punto p1, Punto p2)
         {
             Circle = circle;
             InicialRay = new Ray(circle.Centro, p1);
@@ -21,8 +21,8 @@ namespace GEOWALL_E
         public Circle Circle { get; }
         public Ray InicialRay { get; }
         public Ray FinalRay { get; }
-        public Point P1 { get; }
-        public Point P2 { get; }
+        public Punto P1 { get; }
+        public Punto P2 { get; }
 
         public void Draw() { }
     }

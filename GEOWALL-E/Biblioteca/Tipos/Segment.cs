@@ -8,7 +8,7 @@ namespace GEOWALL_E
 {
     class Segment : ILugarGeometrico  //representa un segmento
     {
-        public Segment(Point p1, Point p2)
+        public Segment(Punto p1, Punto p2)
         {
             P1 = p1;
             P2 = p2;
@@ -16,8 +16,8 @@ namespace GEOWALL_E
            CalcularDistancia();
         }
         public string Identificador { get; set; }
-        public Point P1 { get; }
-        public Point P2 { get; }
+        public Punto P1 { get; }
+        public Punto P2 { get; }
 
         public double Longitud { get; private set; }
 

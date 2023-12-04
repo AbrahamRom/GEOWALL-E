@@ -8,17 +8,17 @@ namespace GEOWALL_E
 {
     class Measure
     {
-        public Measure(string identificador , Point p1, Point p2)
+        public Measure(Punto p1, Punto p2)
         {
-            Identificador = identificador;
             P1 = p1;
             P2 = p2;
             CalcularDistancia();
         }
+        
         //  public override Tipo_De_Token Tipo => Tipo_De_Token.circle_Expresion;
-        public string Identificador { get; }
-        public Point P1 { get; }
-        public Point P2 { get; }
+       // public string Identificador { get; }
+        public Punto P1 { get; }
+        public Punto P2 { get; }
 
         public double Value { get; private set; }
 
