@@ -1,5 +1,6 @@
 using GEOWALL_E.Relacionado_con_hulk.Geometria.Draw_Functions;
 using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -620,7 +621,7 @@ namespace GEOWALL_E
             }
         }
 
-        //Arreglar-------------------------------------------------------------------
+        //Arreglar-----------------------------------------------------------------------
         private void Dibujar_Arco(Arc _arc, Pen lapiz)
         {
             Punto P1 = (Punto)_arc.P1;
@@ -629,10 +630,28 @@ namespace GEOWALL_E
 
             Measure measure = (Measure)_arc._Measure;
 
-            //Producto escalar
-            double angulo = Math.Acos(((P1.valor_x * P2.valor_x) + (P1.valor_y * P2.valor_y))/ 2* measure.Valor);
+            //Tangente
+            double M1 = (P3.valor_y - P1.valor_y) / (P3.valor_x - P1.valor_x);
+            double angulo_inicial = Math.Atan(M1) * 180/Math.PI;
 
-            GEOWALL_E.Papel.DrawArc(lapiz, (int)P1.valor_x - (int)measure.Valor, (int)P1.valor_y - (int) measure.Valor, 2 * (int)measure.Valor, 2 *(int)measure.Valor, 0, (int)angulo);
+            double M2 = (P2.valor_y - P1.valor_y) / (P2.valor_x - P1.valor_x);
+            double angulo_final = Math.Atan(M2) * 180/Math.PI;
+
+            double angulo_entre_tangentes = Math.Atan((M2 - M1)/ 1 + M2 * M1) * 180/ Math.PI;
+
+            if(angulo_final - angulo_inicial < 180)
+            {
+                GEOWALL_E.Papel.DrawArc(lapiz, (int)P1.valor_x - (int)measure.Valor, (int)P1.valor_y - (int)measure.Valor, 2 * (int)measure.Valor, 2 * (int)measure.Valor, (int)angulo_inicial, 360 - (int)angulo_entre_tangentes);
+            }
+            else GEOWALL_E.Papel.DrawArc(lapiz, (int)P1.valor_x - (int)measure.Valor, (int)P1.valor_y - (int)measure.Valor, 2 * (int)measure.Valor, 2 * (int)measure.Valor, (int)angulo_inicial, (int)angulo_entre_tangentes);
+
+
+            //point p(600, 400);
+            //point a(700, 300);
+            //point q(600, 700);
+            //draw ray(p, a);
+            //draw ray(p, q);
+            //draw arc(p, a, q, measure(p, a));
         }
 
     }
