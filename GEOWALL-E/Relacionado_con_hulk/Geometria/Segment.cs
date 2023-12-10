@@ -15,8 +15,8 @@ namespace GEOWALL_E
         }
         public Segment(Expresion p1, Expresion p2)
         {
-            P1 = p1;
-            P2 = p2;
+            P1 = (Punto)p1;
+            P2 = (Punto)p2;
         }
         public Segment(string identificador)
         {
@@ -27,8 +27,8 @@ namespace GEOWALL_E
         }
         public override Tipo_De_Token Tipo => Tipo_De_Token.segment_Expresion;
         public string Identificador { get; set; }
-        public Expresion P1 { get; }
-        public Expresion P2 { get; }
+        public Punto P1 { get; }
+        public Punto P2 { get; }
 
     }
 }
