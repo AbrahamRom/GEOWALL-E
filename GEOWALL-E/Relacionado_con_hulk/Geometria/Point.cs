@@ -1,6 +1,6 @@
 ﻿namespace GEOWALL_E
 {
-    class Punto: Expresion
+    class Punto: Expresion, ILugarGeometrico
     {
        
         public Punto() // agregado por Abraham // gran aporte ;)
@@ -55,5 +55,9 @@
 
         public double valor_x { get; }
         public double valor_y { get; }
+    }
+    public interface ILugarGeometrico
+    {
+
     }
 }

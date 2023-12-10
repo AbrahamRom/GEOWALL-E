@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GEOWALL_E
 {
-     class Line: Expresion  //representa una recta
+     class Line: Expresion ,ILugarGeometrico //representa una recta
     {
         public Line(Punto p1, Punto p2) 
         {
