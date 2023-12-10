@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
 {
-    public class Intersections
+    public class Intersections //candelaaaaaaaaaaaaa imbert
     {
         //#region PuntoEnFiguras
         //Secuencia PointInFigure(Punto punto, ILugarGeometrico figura)
