@@ -110,9 +110,5 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
 
         }
         #endregion
-        public class Secuencia
-        {
-
-        }
     }
 }
