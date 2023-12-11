@@ -297,6 +297,7 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
                     return new Secuencias_Evaluada();
                 default: return new Secuencias_Evaluada();
             }
+
         }
         #endregion
 
