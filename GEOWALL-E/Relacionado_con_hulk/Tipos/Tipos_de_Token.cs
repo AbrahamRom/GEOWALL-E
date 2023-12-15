@@ -39,6 +39,7 @@ namespace GEOWALL_E
         la_nada,
         Corchete_Abierto,
         Corchete_Cerrado,
+        intervalo_infinito,
 
         //Keywords
         if_Keyword,
@@ -84,10 +85,12 @@ namespace GEOWALL_E
         segment_Expresion,
         measure_Expresion,
         secuencia_Expresion,
+        secuencia_infinita_Expresion,
         undefined_Expresion,
         randoms_Expresion,
         samples_Expresion,
         count_Expresion,
+        intersect_Expresion,
 
         point_sequence_Expresion,
         line_sequence_Expresion,
@@ -110,9 +113,17 @@ namespace GEOWALL_E
         randoms_Keyword,
         samples_Keyword,
         sequence_Keyword,
+        intersect_Keyword,
 
         draw_Keyword,
 
+
+        //Colores
+        color_Keyword,
+        color_Expresion,
+
+        restore_Keyword,
+        restore_Expresion,
     }
 }
 

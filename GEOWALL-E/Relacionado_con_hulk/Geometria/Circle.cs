@@ -36,7 +36,7 @@ namespace GEOWALL_E
         public Expresion Centro { get; }
         public Expresion Radio { get; }
 
-        public void Draw()//revisar innecesario
+        public void Draw()
         {
            
 

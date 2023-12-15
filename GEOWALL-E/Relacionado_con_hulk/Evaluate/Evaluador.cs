@@ -1,6 +1,9 @@
 using GEOWALL_E.Relacionado_con_hulk.AST;
+using GEOWALL_E.Relacionado_con_hulk.Colores;
 using GEOWALL_E.Relacionado_con_hulk.Geometria;
 using GEOWALL_E.Relacionado_con_hulk.Geometria.Draw_Functions;
+using GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections;
+using GEOWALL_E.Relacionado_con_hulk.Geometria.Secuencias;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -16,6 +19,10 @@ namespace GEOWALL_E
         private readonly List<Expresion> _rama;
 
         private int _posicion;
+
+        private Color color_lapiz;
+
+        private Stack<Color> Colores = new Stack<Color>();
 
         public Evaluador(List<Expresion> rama)
         {
@@ -37,6 +44,8 @@ namespace GEOWALL_E
         }
         public void Evaluar()
         {
+            Colores.Push(Color.Black);
+
             while (_posicion < _rama.Count)
             {
                 Evaluar_Expresion(Verificandose);
@@ -70,16 +79,16 @@ namespace GEOWALL_E
                 //------------------------------------------------//SECUENCIAS//------------------------------------------------------//
 
                 case Asignacion_Secuencia: return Evaluar_Expresion_Asignacion_Secuencia((Asignacion_Secuencia)nodo);
-                case Secuencias: return Evaluar_Expresion_Secuencia((Secuencias)nodo);
-                case Randoms: return Evaluar_Expresion_Randoms((Randoms)nodo);
-                case Samples: return Evaluar_Expresion_Samples((Samples)nodo);
                 case Count: return Evaluar_Expresion_Count((Count)nodo);
                 case Point_Sequence: return Evaluar_Expresion_Point_Sequence((Point_Sequence)nodo);
                 case Line_Sequence: return Evaluar_Expresion_Line_Sequence((Line_Sequence)nodo);
                 case Circle_Sequence: return Evaluar_Expresion_Circle_Sequence((Circle_Sequence)nodo);
                 case Ray_Sequence: return Evaluar_Expresion_Ray_Sequence((Ray_Sequence)nodo);
                 case Segment_Sequence: return Evaluar_Expresion_Segment_Sequence((Segment_Sequence)nodo);
-                case undefined: return null;
+                case Secuencias<Expresion>: return Evaluar_Expresion_Secuencia((Secuencias<Expresion>)nodo);
+                case Secuencia_Infinita<Expresion>: return Evaluar_Expresion_Secuencia_Infinita((Secuencia_Infinita<Expresion>)nodo);
+                case Secuencia_Infinita<Punto>: return nodo;
+                case undefined: return nodo;
 
                 //------------------------------------------------//GEOMETRIA//------------------------------------------------------//
 
@@ -91,12 +100,32 @@ namespace GEOWALL_E
                 case Ray: return Evaluar_Expresion_Ray((Ray)nodo);
                 case Arc: return Evaluar_Expresion_Arc((Arc)nodo);
 
+                //---------------------------------------------------// INTERSECCION //-----------------------------------------------------//
+
+                
+
                 //---------------------------------------------------// Dibujo //-----------------------------------------------------//
 
                 case Dibujar: return Evaluar_Expresion_Dibujar((Dibujar)nodo);
+                case Cambiar_Color: return Cambiar_Color_Lapiz((Cambiar_Color)nodo);
+                case Restore: return Color_Anterior();
 
                 default: throw new Exception($"! SYNTAX ERROR : Unexpected node <{nodo}>");
             }
+        }
+        private object Color_Anterior()
+        {
+            if (Colores.Count == 1) return null;
+            else
+            {
+                Colores.Pop();
+                return null;
+            }
+        }
+        private object Cambiar_Color_Lapiz(Cambiar_Color cambiar_Color)
+        {
+            Colores.Push(cambiar_Color._Color);
+            return null;
         }
         private static void Verificar_tipos(Expresion_Binaria b, object left, object right)
         {
@@ -254,11 +283,7 @@ namespace GEOWALL_E
 
             if ((bool)condicion) return Evaluar_Expresion(j._expresion);
 
-            else
-            {
-
-                return Evaluar_Expresion(j._Else);
-            }
+            else return Evaluar_Expresion(j._Else);
         }
         private object Evaluar_Expresion_Asignacion(Asignacion w)
         {
@@ -277,69 +302,133 @@ namespace GEOWALL_E
                     if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificadores[i]] = new undefined();
                 }
                 verificar_asignacion_identificadores(y.Identificador_resto_de_secuencia);
-                if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificador_resto_de_secuencia] = new Secuencias_Evaluada();
+                if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificador_resto_de_secuencia] = new Secuencias<object>();
             }
-            else
+            //Secuencias numericas
+            else if(y._Secuencia is Secuencia_Infinita<Expresion>)
             {
-                Secuencias_Evaluada _secuencia = (Secuencias_Evaluada)Evaluar_Expresion(y._Secuencia);
+                Secuencia_Infinita<double> secuencia_infinita = (Secuencia_Infinita<double>)Evaluar_Expresion(y._Secuencia);
 
-                Secuencias_Evaluada _resto = new Secuencias_Evaluada();
+                Secuencia_Infinita<double> _resto = new Secuencia_Infinita<double>();
 
-                int marcador = 0;
-                for (int i = 0; i < y.Identificadores.Count; i++)
+                double marcador = 0;
+                for(int i = 0; i < y.Identificadores.Count; i++)
                 {
                     verificar_asignacion_identificadores(y.Identificadores[i]);
-                    if (y.Identificadores[i] == "_")
+                    // caso {1 ...}
+                    if(secuencia_infinita.Count == 1)
                     {
-
+                        if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificadores[i]] = secuencia_infinita[0] + i;
+                        marcador = secuencia_infinita[0] + i + 1;
                     }
-                    else if (i >= _secuencia.Count)
+                    // caso {a ... b}
+                    else 
                     {
-                        if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificadores[i]] = new undefined();
+                        if ((secuencia_infinita[0] + i) > secuencia_infinita[secuencia_infinita.Count - 1])
+                        {
+                            if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificadores[i]] = new undefined();
+                            marcador = 0;
+                        }
+                        else
+                        {
+                            if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificadores[i]] = secuencia_infinita[0] + i;
+                            marcador = secuencia_infinita[0] + i + 1;
+                        }
+                    }
+                }
+                //case {1...} si habia cuatro constantes el resto seria {5...}
+                if (secuencia_infinita.Count == 1)
+                {
+                    _resto.Add(marcador);
+                    verificar_asignacion_identificadores(y.Identificador_resto_de_secuencia);
+                    if (Biblioteca.Pila.Count == 0 && y.Identificador_resto_de_secuencia != "_") Biblioteca.Variables[y.Identificador_resto_de_secuencia] = _resto;
+
+                }
+                else 
+                {
+                    if(marcador == 0 || marcador >= secuencia_infinita[secuencia_infinita.Count - 1])
+                    {
+                        verificar_asignacion_identificadores(y.Identificador_resto_de_secuencia);
+                        if (Biblioteca.Pila.Count == 0 && y.Identificador_resto_de_secuencia != "_") Biblioteca.Variables[y.Identificador_resto_de_secuencia] = _resto;
+
                     }
                     else
                     {
-                        if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificadores[i]] = _secuencia[i];
-                        marcador++;
+                        _resto.Add(marcador);
+                        _resto.Add(secuencia_infinita[secuencia_infinita.Count - 1]);
+                        verificar_asignacion_identificadores(y.Identificador_resto_de_secuencia);
+                        if (Biblioteca.Pila.Count == 0 && y.Identificador_resto_de_secuencia != "_") Biblioteca.Variables[y.Identificador_resto_de_secuencia] = _resto;
                     }
                 }
-                for (int i = marcador; i < _secuencia.Count; i++)
+            }
+            //caso para samples() y bueno despues points(f)
+            else if(y._Secuencia is Secuencia_Infinita<Punto>)
+            {
+                Secuencia_Infinita<Punto> _resto = new Secuencia_Infinita<Punto>();
+
+                for (int i = 0; i < y.Identificadores.Count; i++)
                 {
-                    _resto.Add(_secuencia[i]);
+                    verificar_asignacion_identificadores(y.Identificadores[i]);
+                    if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificadores[i]] = new Punto();
                 }
-                //resto
                 verificar_asignacion_identificadores(y.Identificador_resto_de_secuencia);
+                _resto.Add(new Punto());
                 if (Biblioteca.Pila.Count == 0 && y.Identificador_resto_de_secuencia != "_") Biblioteca.Variables[y.Identificador_resto_de_secuencia] = _resto;
+            }
+            else
+            {
+                Secuencias<object> _secuencia = (Secuencias<object>)Evaluar_Expresion(y._Secuencia);
+
+                Secuencias<object> _resto = new Secuencias<object>();
+
+                    int marcador = 0;
+                    for (int i = 0; i < y.Identificadores.Count; i++)
+                    {
+                        verificar_asignacion_identificadores(y.Identificadores[i]);
+                        if (i >= _secuencia.Count)
+                        {
+                            if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificadores[i]] = new undefined();
+                        }
+                        else
+                        {
+                            if (Biblioteca.Pila.Count == 0) Biblioteca.Variables[y.Identificadores[i]] = _secuencia[i];
+                            marcador++;
+                        }
+                    }
+                    for (int i = marcador; i < _secuencia.Count; i++)
+                    {
+                        _resto.Add(_secuencia[i]);
+                    }
+                    //resto
+                    verificar_asignacion_identificadores(y.Identificador_resto_de_secuencia);
+                    if (Biblioteca.Pila.Count == 0 && y.Identificador_resto_de_secuencia != "_") Biblioteca.Variables[y.Identificador_resto_de_secuencia] = _resto;
+                
             }
             return null;
         }
-
-        private object Evaluar_Expresion_Secuencia(Secuencias z)
+        private object Evaluar_Expresion_Secuencia(Secuencias<Expresion> z)
         {
-            var _secuencia = new Secuencias_Evaluada();
-            for(int i= 0; i < z.Count; i++)
+            var _secuencia = new Secuencias<object>();
+            for (int i = 0; i < z.Count; i++)
             {
                 _secuencia.Add(Evaluar_Expresion(z[i]));
             }
             return _secuencia;
+            
         }
-        private object Evaluar_Expresion_Randoms(Randoms r)
+        private object Evaluar_Expresion_Secuencia_Infinita(Secuencia_Infinita<Expresion> z)
         {
-            var _secuencia = new Secuencias_Evaluada();
-            foreach(var x in r)
+            var _secuecia_infinita = new Secuencia_Infinita<double>();
+            for(int i = 0; i < z.Count; i++)
             {
-                _secuencia.Add(x);
+                var item = Evaluar_Expresion(z[i]);
+                if (item is double)
+                {
+                    _secuecia_infinita.Add((double) item);
+                }
+                else throw new Exception($"! SEMANTIC ERROR : Infinite sequences cannot have these types of terms");
             }
-            return _secuencia;
-        }
-        private object Evaluar_Expresion_Samples(Samples samples) 
-        {
-            var _secuencia = new Secuencias_Evaluada();
-            foreach(var x in samples)
-            {
-                _secuencia.Add(x);
-            }
-            return _secuencia;
+            return _secuecia_infinita;
         }
         private object Evaluar_Expresion_Count(Count count)
         {
@@ -347,10 +436,14 @@ namespace GEOWALL_E
             if(count._Secuencia is Literal)
             {
                 var expresion = Evaluar_Expresion(count._Secuencia);
-                if(expresion is Secuencias_Evaluada)
+                if(expresion is Secuencias<object>)
                 {
-                    Secuencias_Evaluada _secuencia = (Secuencias_Evaluada) expresion;
+                    Secuencias<object> _secuencia = (Secuencias<object>)expresion;
                     return _secuencia.Count;
+                }
+                else if(expresion is Secuencia_Infinita<double> || expresion is Secuencia_Infinita<Punto>)
+                {
+                    return new undefined();
                 }
                 else throw new Exception($"! SEMANTIC ERROR : This expression does not have the count property");
             }
@@ -617,49 +710,51 @@ namespace GEOWALL_E
         }
         private  object Evaluar_Expresion_Dibujar(Dibujar p)
         {
-            Pen lapiz = new Pen(Color.Black, 4);
+            color_lapiz = Colores.Peek();
 
-            switch (p._Expresion.Tipo)
+            Pen lapiz = new Pen(color_lapiz, 4);
+
+            switch (p._Expresion)
             {
-                case Tipo_De_Token.point_Expresion:
+                case Punto:
                     {
                         Punto _punto = (Punto)Evaluar_Expresion(p._Expresion);
                         Dibujar_Punto(_punto, lapiz);
                         return null;
                     }
-                case Tipo_De_Token.arc_Expresion:
+                case Arc:
                     {
                         Arc _arc = (Arc)Evaluar_Expresion(p._Expresion);
                         Dibujar_Arco(_arc, lapiz);
                         return null;
                     }
-                case Tipo_De_Token.circle_Expresion:
+                case Circle:
                     {
                         Circle _circle = (Circle)Evaluar_Expresion(p._Expresion);
                         Dibujar_Circunsferencia(_circle, lapiz);
                         return null;
                     }
-                case Tipo_De_Token.line_Expresion:
+                case Line:
                     {
                         Line _line = (Line)Evaluar_Expresion(p._Expresion);
                         Dibujar_Linea(_line, lapiz);
                         return null;
                     }
-                case Tipo_De_Token.ray_Expresion:
+                case Ray:
                     {
                         Ray _ray = (Ray)Evaluar_Expresion(p._Expresion);
                         Dibujar_Rayo(_ray, lapiz);
                         return null;
                     }
-                case Tipo_De_Token.segment_Expresion:
+                case Segment:
                     {
                         Segment _segment = (Segment)Evaluar_Expresion(p._Expresion);
                         Dibujar_Segmento(_segment, lapiz);
                         return null;
                     }
-                case Tipo_De_Token.secuencia_Expresion:
+                case Secuencias<object>:
                     {
-                        Secuencias_Evaluada _secuencia = (Secuencias_Evaluada)Evaluar_Expresion(p._Expresion);
+                        Secuencias<object> _secuencia = (Secuencias<object>)Evaluar_Expresion(p._Expresion);
                         for(int i = 0; i < _secuencia.Count; i++)
                         {
                             if (_secuencia[i] is Punto)
@@ -685,7 +780,14 @@ namespace GEOWALL_E
                         }
                         return null;
                     }
-                case Tipo_De_Token.Literal:
+                case Secuencia_Infinita<Punto>:
+                    {
+                        while(true)
+                        {
+                            Dibujar_Punto(new Punto(), lapiz);
+                        }
+                    }
+                case Literal:
                     {
                         Literal _literal = (Literal)p._Expresion;
 
@@ -709,9 +811,9 @@ namespace GEOWALL_E
                             {
                                 Dibujar_Rayo((Ray)_expresion, lapiz);
                             }
-                            else if (_expresion is Secuencias_Evaluada)
+                            else if (_expresion is Secuencias<object>)
                             {
-                                var _secuencia = (Secuencias_Evaluada)_expresion;
+                                var _secuencia = (Secuencias<object>)_expresion;
 
                                 for (int i = 0; i < _secuencia.Count; i++)
                                 {
@@ -737,11 +839,18 @@ namespace GEOWALL_E
                                     }
                                 }
                             }
-                            else if(_expresion is undefined)
+                            else if (_expresion is Segment)
                             {
-
+                                Dibujar_Segmento((Segment)_expresion, lapiz);
                             }
-                            else Dibujar_Segmento((Segment)_expresion, lapiz);
+                            else if(_expresion is Secuencia_Infinita<Punto>)
+                            {
+                                while(true)
+                                {
+                                    Dibujar_Punto(new Punto(), lapiz);
+                                }
+                            }
+                            else throw new Exception($"! SEMANTIC ERROR : This expression cannot be draw");
 
                             return null;
                         }
@@ -765,9 +874,9 @@ namespace GEOWALL_E
                             {
                                 Dibujar_Rayo((Ray)_expresion, lapiz);
                             }
-                            else if (_expresion is Secuencias_Evaluada)
+                            else if (_expresion is Secuencias<object>)
                             {
-                                var _secuencia = (Secuencias_Evaluada)_expresion;
+                                var _secuencia = (Secuencias<object>)_expresion;
 
                                 for (int i = 0; i < _secuencia.Count; i++)
                                 {
@@ -793,11 +902,18 @@ namespace GEOWALL_E
                                     }
                                 }
                             }
-                            else if (_expresion is undefined)
+                            else if(_expresion is Segment)
                             {
-
+                                Dibujar_Segmento((Segment)_expresion, lapiz);
                             }
-                            else Dibujar_Segmento((Segment)_expresion, lapiz);
+                            else if (_expresion is Secuencia_Infinita<Punto>)
+                            {
+                                while (true)
+                                {
+                                    Dibujar_Punto(new Punto(), lapiz);
+                                }
+                            }
+                            else throw new Exception($"! SEMANTIC ERROR : This expression cannot be draw");
 
                             return null;
                         }
@@ -808,7 +924,7 @@ namespace GEOWALL_E
                     }
                 default:
                     {
-                        throw new Exception($"! SEMANTIC ERROR : This expression cannot be drawn");
+                        throw new Exception($"! SEMANTIC ERROR : This expression cannot be draw");
                     }
             }
 

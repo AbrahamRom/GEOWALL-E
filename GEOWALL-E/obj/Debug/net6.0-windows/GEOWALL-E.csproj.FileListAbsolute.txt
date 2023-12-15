@@ -83,3 +83,4 @@ O:\Desktop\WALL-E\AbrahamRom\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWAL
 O:\Desktop\WALL-E\AbrahamRom\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\ref\GEOWALL-E.dll
 O:\Desktop\WALL-E\AbrahamRom\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL-E.pdb
 O:\Desktop\WALL-E\AbrahamRom\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL-E.genruntimeconfig.cache
+C:\Users\abelp\OneDrive\Documents\GitHub\GEOWALL-E\GEOWALL-E\obj\Debug\net6.0-windows\GEOWALL-E.csproj.AssemblyReference.cache
