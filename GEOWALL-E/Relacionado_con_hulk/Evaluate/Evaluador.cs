@@ -1457,7 +1457,7 @@ namespace GEOWALL_E
             double M2 = (P3.valor_y - P1.valor_y) / (P3.valor_x - P1.valor_x);
             double angulo_inicial = Math.Atan(M2) * 180 / Math.PI;
 
-            double angulo_entre_tangentes = Math.Atan((M2 - M1) / 1 + M2 * M1) * 180 / Math.PI;
+           // double angulo_entre_tangentes = Math.Atan((M2 - M1) / 1 + M2 * M1) * 180 / Math.PI;
 
             double diferencia = angulo_final - angulo_inicial;
 
