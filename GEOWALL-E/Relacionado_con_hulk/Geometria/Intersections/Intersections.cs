@@ -28,7 +28,7 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
             }
         }
 
-        #region PuntoEnFiguras
+        #region PuntoEnFiguras //listo
         static Secuencias<object> PointInFigure(Punto punto, ILugarGeometrico figura)
         {
             switch (figura)
@@ -130,7 +130,17 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
                 return new Secuencias<object>();//secuencia vacia
             }
         }
-        static Secuencias<object> PuntoIntArc(Punto p1, Arc arc)//falta
+        static Secuencias<object> PuntoIntArc(Punto p1, Arc arc)
+        {
+            if (_PuntoIntArc(p1, arc))
+            {
+                var x = new Secuencias<object>();
+                x.Add(p1);
+                return x;
+            }
+            else return new Secuencias<object>();//secuencia vacia
+        }
+        static bool _PuntoIntArc(Punto p1, Arc arc)
         {
             bool _PointInCircle = PointIntCircle(p1, new Circle(arc.P1, arc._Measure));
             Punto P1 = (Punto)arc.P1;
@@ -146,13 +156,7 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
             double anguloPunto = Math.Atan(pendienteP) * 180 / Math.PI;
 
             bool PuntoEnAngulos = anguloPunto >= angulo_inicial && anguloPunto <= angulo_final;
-            if (_PointInCircle && PuntoEnAngulos)
-            {
-                var x = new Secuencias<object>();
-                x.Add(p1);
-                return x;
-            }
-            else return new Secuencias<object>();//secuencia vacia
+            return (_PointInCircle && PuntoEnAngulos);
         }
         static Secuencias<object> PuntoIntCircle(Punto p1, Circle circle)
         {
@@ -210,34 +214,34 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
         }
         #endregion
 
-        #region LineInFigure
+        #region LineInFigure //listo
         static Secuencias<object> LineInFigure(Line line, ILugarGeometrico fig)
         {
             switch (fig)
             {
                 case Punto a:
-                    return PointInFigure(a, line);
+                    return PuntoIntLine(a, line);
                 case Line a:
-                    return LineInLine(line,a);
+                    return LineInLine(line, a);
                 case Segment a:
-                    return new Secuencias<object>();
+                    return LineIntSegment(line, a);
                 case Arc a:
-                    return new Secuencias<object>();
+                    return LineIntArc(line, a);
                 case Circle a:
-                    return new Secuencias<object>();
+                    return LineIntCircle(line, a);
                 case Ray a:
-                    return new Secuencias<object>();
+                    return LineIntRay(line, a);
                 default: return new Secuencias<object>();
             }
         }
-        static Secuencias<object> LineInLine(Line line1,Line line2)
+        static Secuencias<object> LineInLine(Line line1, Line line2)
         {
             switch (LinesInterceptions(line1, line2))
             {
                 case 1:
                     {
                         var x = new Secuencias<object>();
-                        x.Add(IntersectionOfLines(line1,line2));
+                        x.Add(IntersectionOfLines(line1, line2));
                         return x;
                     }
                 case 0:
@@ -248,17 +252,17 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
                         x.Add(new undefined());
                         return x;
                     }
-                    default: return new Secuencias<object>();
+                default: return new Secuencias<object>();
             }
         }
-        static Punto IntersectionOfLines(Line line1,Line line2)
+        static Punto IntersectionOfLines(Line line1, Line line2)
         {
             var recta1 = EcuacionRecta(line1);// y = mx+n
             var recta2 = EcuacionRecta(line2);// y = tx+k
             double n = recta1(0);
             double k = recta2(0);
-            double m = (recta1(1)-n);
-            double t = (recta2(1)-n);
+            double m = (recta1(1) - n);
+            double t = (recta2(1) - n);
             double x = (k - n) / (m - t);
             double y = recta1(x);
             return new Punto(x, y);
@@ -287,28 +291,119 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
                 return M1 == M2;// revisar con math.epsilon
             }
             if (RectasCoincidentes(line1, line2)) return -1; // retorna -1 si la rectas son coincidentes,hay q devolver undefined
-            if(MismaPendiente(line1 , line2)) return 0; //retorna 0 si la rectas son paralelas, hay que devolver una secuencia vacia
+            if (MismaPendiente(line1, line2)) return 0; //retorna 0 si la rectas son paralelas, hay que devolver una secuencia vacia
             return 1; // retorna 1 , devuelve una secuencia con un punto
         }
-        //static Secuencias<object> LineIntSegment(Line line, Segment segment)
-        //{
-        //    switch (LinesInterceptions(line, new Line(segment.P1,segment.P2)))
-        //    {
-                
-        //    }
-        //}
-        
-            #endregion
+        static Secuencias<object> LineIntSegment(Line line, Segment segment)
+        {
+            switch (LinesInterceptions(line, new Line(segment.P1, segment.P2)))
+            {
+                case 0:
+                    return new Secuencias<object>();
+                case -1:
+                    {
+                        var x = new Secuencias<object>();
+                        x.Add(new undefined());
+                        return x;
+                    }
+                case 1:
+                    {
+                        var PuntoInt = IntersectionOfLines(line, new Line(segment.P1, segment.P2));
+                        return PuntoIntSegment(PuntoInt, segment);//si el punto de intercepcion esta en el segmento lo devuelve,si no devuelve vacio
+                    }
+                default: return new Secuencias<object>();
+            }
+        }
+        static Secuencias<object> LineIntRay(Line line, Ray ray)
+        {
+            switch (LinesInterceptions(line, new Line(ray.P1, ray.P2)))
+            {
+                case 0:
+                    return new Secuencias<object>();
+                case -1:
+                    {
+                        var x = new Secuencias<object>();
+                        x.Add(new undefined());
+                        return x;
+                    }
+                case 1:
+                    {
+                        var PuntoInt = IntersectionOfLines(line, new Line(ray.P1, ray.P2));
+                        return PuntoIntRay(PuntoInt, ray);//si el punto de intercepcion esta en el rayo lo devuelve,si no devuelve vacio
+                    }
+                default: return new Secuencias<object>();
+            }
+        }
+        static Secuencias<object> LineIntCircle(Line line, Circle circle)
+        {
+            var recta = EcuacionRecta(line);
+            // Coordenadas del centro de la circunferencia
+            Punto Centro = (Punto)circle.Centro;
+            double cx = Centro.valor_x;
+            double cy = Centro.valor_y;
+            // Radio de la circunferencia
+            Measure radio = (Measure)circle.Radio;
+            double r = DistanciaEPuntos((Punto)radio.P1, (Punto)radio.P2);
+            // Coeficientes de la ecuación de la recta y = mx + b
+            double b = recta(0);
+            double m = (recta(1) - b);//ver
+            // Calculamos los puntos de intersección
+            double A = 1 + Math.Pow(m, 2);
+            double B = 2 * (m * b - m * cy - cx);
+            double C = Math.Pow(cx, 2) + Math.Pow(cy, 2) + Math.Pow(b, 2) - Math.Pow(r, 2) - 2 * b * cy;
+            // Calculamos el discriminante
+            double discriminante = Math.Pow(B, 2) - 4 * A * C;
+            var res = new Secuencias<object>();
+            if (discriminante < 0)
+            {
+                return res;
+            }
+            else if (discriminante == 0)
+            {
+                double x = -B / (2 * A);//hallar punto
+                double y = m * x + b;
+                Punto p = new Punto(x, y);
+                res.Add(p);
+                return res;
+            }
+            else
+            {
+                double x1 = (-B + Math.Sqrt(discriminante)) / (2 * A);
+                double y1 = m * x1 + b;
+                double x2 = (-B - Math.Sqrt(discriminante)) / (2 * A);//hallar puntos
+                double y2 = m * x2 + b;
+                Punto p = new Punto(x1, y1);
+                res.Add(p);
+                Punto q = new Punto(x2, y2);
+                res.Add(p);
+                return res;
+            }
+        }
+        static Secuencias<object> LineIntArc(Line line, Arc arc)
+        {
+            var res = new Secuencias<object>();
+            var x = LineIntCircle(line, new Circle(arc.P1, arc._Measure));
+            for (int i = 0; i < x.Count; i++)
+            {
+                Punto p = (Punto)x[i];
+                if (_PuntoIntArc(p, arc))
+                {
+                    res.Add(p);
+                }
+            }
+            return res;
+        }
+        #endregion
 
-            #region SegmentInFigure
-            static Secuencias<object> SegmentInFigure(Segment segment, ILugarGeometrico fig)
+        #region SegmentInFigure
+        static Secuencias<object> SegmentInFigure(Segment segment, ILugarGeometrico fig)
         {
             switch (fig)
             {
                 case Punto a:
-                    return PointInFigure(a, fig);
+                    return PuntoIntSegment(a, segment);
                 case Line a:
-                    return new Secuencias<object>();
+                    return LineIntSegment(a, segment);
                 case Segment a:
                     return new Secuencias<object>();
                 case Arc a:
@@ -320,6 +415,23 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
                 default: return new Secuencias<object>();
             }
         }
+        //static Secuencias<object> SegmentIntSegment(Segment s1, Segment s2)
+        //{
+        //    var res = new Secuencias<object>();
+        //    var x = LineInLine(new Line(s1.P1, s1.P2), new Line(s2.P1, s2.P2));
+        //    if (!(x[0] is undefined))//revisar en caso de cambiar la implemntacion de undefined
+        //    {
+        //        for (int i = 0; i < x.Count; i++)
+        //        {
+        //            Punto p = (Punto)x[i];
+        //            if ()
+        //            {
+        //                res.Add(p);
+        //            }
+        //        }
+        //        return res;
+        //    }
+        //}
         #endregion
 
         #region ArcInFigure
@@ -328,7 +440,7 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
             switch (fig)
             {
                 case Punto a:
-                    return PointInFigure(a, fig);
+                    return PuntoIntArc(a, arc);
                 case Line a:
                     return new Secuencias<object>();
                 case Segment a:
@@ -350,9 +462,9 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
             switch (fig)
             {
                 case Punto a:
-                    return PointInFigure(a, fig);
+                    return PuntoIntCircle(a, circle);
                 case Line a:
-                    return new Secuencias<object>();
+                    return LineIntCircle(a, circle);
                 case Segment a:
                     return new Secuencias<object>();
                 case Arc a:
@@ -372,7 +484,7 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections
             switch (fig)
             {
                 case Punto a:
-                    return PointInFigure(a, fig);
+                    return PuntoIntRay(a, ray);
                 case Line a:
                     return new Secuencias<object>();
                 case Segment a:
