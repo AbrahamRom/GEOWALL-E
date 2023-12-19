@@ -6,6 +6,7 @@ using GEOWALL_E.Relacionado_con_hulk.Geometria.Intersections;
 using GEOWALL_E.Relacionado_con_hulk.Geometria.Secuencias;
 using GEOWALL_E.Relacionado_con_hulk.Tipos;
 using System.Diagnostics.Eventing.Reader;
+using System.Linq.Expressions;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.Serialization;
 
@@ -383,6 +384,11 @@ namespace GEOWALL_E
                     {
                         Proximo_Token();
                         var _expresion = Parse_Expresion();
+                        if(Verificandose.Tipo is Tipo_De_Token.String)
+                        {
+                            var etiqueta = Proximo_Token().Texto;
+                            return new Dibujar(_expresion, etiqueta);
+                        }
                         return new Dibujar(_expresion);
                     }
 
@@ -629,7 +635,12 @@ namespace GEOWALL_E
                         {
                             Proximo_Token();
                             var _expresion = Parse_Expresion();
+                            if (secuencia[0].GetType() != _expresion.GetType())
+                            {
+                                throw new Exception($"! SEMANTIC ERROR : This sequence only contains object of type <{secuencia[0].GetType().Name}> not <{_expresion.GetType().Name}>");
+                            }
                             secuencia.Add(_expresion);
+                            secuencia_infinita.Add(_expresion);
                         }
 
                         //SECUENCIA INFINITA
@@ -639,7 +650,25 @@ namespace GEOWALL_E
                             //este es por si le quieren poner un tope {a ... b}
                             if(Verificandose.Tipo != Tipo_De_Token.Corchete_Cerrado)
                             {
+                                //no esta definida la secuencia {1, 2, ...}
+                                if (secuencia_infinita.Count != 1) throw new Exception($"! SYNTAX ERROR : Invalid syntax sequence");
+
                                 secuencia_infinita.Add(Parse_Expresion());
+                                //no estan definidas las secuencias infinitas de otros tipos
+                                if (secuencia_infinita[0] is not  Literal || secuencia_infinita[secuencia_infinita.Count - 1] is not Literal)
+                                {
+                                    throw new Exception($"! SEMANTIC ERROR : This sequence only contains object of type <Literal>");
+                                }
+
+                                Literal first = (Literal)secuencia_infinita[0];
+                                Literal Last = (Literal)secuencia_infinita[secuencia_infinita.Count - 1];
+
+                                // hay que evitar errores como {3 ... 2}
+                                if(first.Valor is not string && Last.Valor is not string && (double)first.Valor >= (double) Last.Valor)
+                                {
+                                    throw new Exception($"! SEMANTIC ERROR : Top <{Last.Valor}> cannot be less than <{first.Valor}>");
+                                }
+
                                 Match(Tipo_De_Token.Corchete_Cerrado);
                                 IsOtherExpresion = false;
                                 return secuencia_infinita;
@@ -647,6 +676,8 @@ namespace GEOWALL_E
                             // este cuando hacem { 1...};
                             else 
                             {
+                                if (secuencia_infinita.Count != 1) throw new Exception($"! SYNTAX ERROR : Invalid syntax sequence");
+
                                 Match(Tipo_De_Token.Corchete_Cerrado);
                                 IsOtherExpresion = false;
 

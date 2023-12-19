@@ -316,8 +316,10 @@ namespace GEOWALL_E
             Guardar_En_Biblioteca_Variables(w.Identificador, _expresion);
             return _expresion;
         }
+        
         private object Evaluar_Expresion_Asignacion_Secuencia(Asignacion_Secuencia y)
         {
+            //En caso de que sea un literal se busca en el diccionario y hay q verificar segun el tipo 
             if (y._Secuencia is Literal)
             {
                 Literal a = (Literal)y._Secuencia;
@@ -333,7 +335,7 @@ namespace GEOWALL_E
                     Guardar_En_Biblioteca_Variables(y.Identificador_resto_de_secuencia, new Secuencias<object>());
                 }
                 //Secuencias numericas
-                else if (Tomar_valor(a) is Secuencia_Infinita<object>)
+                else if (Tomar_valor(a) is Secuencia_Infinita<double>)
                 {
                     Secuencia_Infinita<double> secuencia_infinita = (Secuencia_Infinita<double>)Biblioteca.Variables[a._Literal.Texto];
 
@@ -443,7 +445,7 @@ namespace GEOWALL_E
                         }
                         else
                         {
-                            Guardar_En_Biblioteca_Variables(y.Identificadores[i], _secuencia[i]);
+                            Guardar_En_Biblioteca_Variables(y.Identificadores[i],_secuencia[i]);
                             marcador++;
                         }
                     }
@@ -628,6 +630,7 @@ namespace GEOWALL_E
 
             return null;
         }
+        
         private object Evaluar_Expresion_Secuencia(Secuencias<Expresion> z)
         {
             var _secuencia = new Secuencias<object>();
@@ -726,15 +729,9 @@ namespace GEOWALL_E
                     }
                 case Tipo_De_Token.Suma:
                     {
-                        if (left is Secuencias<object> && right is Secuencias<object>)
+                        if (left is Sequence && right is Sequence)
                         {
-                            Secuencias<object> secuencia_1 = (Secuencias<object>)left;
-                            Secuencias<object> secuencia_2 = (Secuencias<object>)right;
-                            for (int i = 0; i < secuencia_2.Count; i++)
-                            {
-                                secuencia_1.Add(secuencia_2[i]);
-                            }
-                            return secuencia_1;
+                            return Concatenacion_Secuencias.Concatenar((Sequence)left, (Sequence)right);
                         }
                         else if (left is undefined && right is Secuencias<object>)
                         {
@@ -768,7 +765,7 @@ namespace GEOWALL_E
                         {
                             Measure m1 = (Measure)left;
                             Measure m2 = (Measure)right;
-                            var valor = m1.Valor - m2.Valor;
+                            var valor = Math.Abs(m1.Valor - m2.Valor);
                             return new Measure(valor);
                         }
                         else throw new Exception($"! SEMANTIC ERROR : Invalid expression: Can't operate <{left.GetType().Name}> with <{right.GetType().Name}> using <{b.Operador.Texto}>");
@@ -780,12 +777,20 @@ namespace GEOWALL_E
                         {
                             return (double)left * (double)right;
                         }
-                        else if (left is Measure && right is Measure)
+                        else if (left is double && right is Measure)
                         {
-                            Measure m1 = (Measure)left;
-                            Measure m2 = (Measure)right;
+                            double natural = (double)left;
+                            Measure m = (Measure)right;
                             
-                            var valor = m1.Valor * m2.Valor;
+                            var valor = natural * m.Valor;
+                            return new Measure(valor);
+                        }
+                        else if (left is Measure && right is double)
+                        {
+                            Measure m = (Measure)left;
+                            double natural = (double)right;
+
+                            var valor = natural * m.Valor;
                             return new Measure(valor);
                         }
                         else throw new Exception($"! SEMANTIC ERROR : Invalid expression: Can't operate <{left.GetType().Name}> with <{right.GetType().Name}> using <{b.Operador.Texto}>");
@@ -1090,9 +1095,6 @@ namespace GEOWALL_E
             }
         }
 
-
-
-
     private  object Evaluar_Expresion_Dibujar(Dibujar p)
         {
             Pen lapiz = new Pen(Colores.Peek(), 4);
@@ -1103,6 +1105,8 @@ namespace GEOWALL_E
                     {
                         Punto _punto = (Punto)Evaluar_Expresion(p._Expresion);
                         Dibujar_Punto(_punto, lapiz);
+                        if (p.Etiqueta is not null) Crear_Etiqueta((int)_punto.valor_x,(int) _punto.valor_y, p.Etiqueta);
+
                         return null;
                     }
                 case Arc:
@@ -1184,6 +1188,7 @@ namespace GEOWALL_E
                             {
                                 Punto _punto = (Punto)_expresion;
                                 Dibujar_Punto(_punto, lapiz);
+                                if (p.Etiqueta is not null) Crear_Etiqueta((int)_punto.valor_x, (int)_punto.valor_y, p.Etiqueta);
                             }
                             else if (_expresion is Line)
                             {
@@ -1337,22 +1342,15 @@ namespace GEOWALL_E
             }
 
         }
-        private Label Crear_Etiqueta(Point location, string identificador)
+        
+        private void Crear_Etiqueta(int valor_x, int valor_y, string identificador)
         {
-            Label etiqueta = new Label
-            {
-                Parent = GEOWALL_E.PANEL_DIBUJO,
-                AutoSize = true,
-                BackColor = Color.Transparent,
-                Text = identificador,
-                Location = location,
-                ForeColor = Color.Black,
-            };
+            Font drawFont = new Font("Arial", 16);
+            SolidBrush drawBrush = new SolidBrush(Color.Black);
 
+            Point location = new Point(valor_x, valor_y);
             //visualizar etiqueta
-            GEOWALL_E.PANEL_DIBUJO.Controls.Add(etiqueta);
-            
-            return etiqueta;
+            GEOWALL_E.Papel.DrawString(identificador, drawFont, drawBrush, location);
         }
 
         private void Dibujar_Punto(Punto _punto, Pen lapiz)
@@ -1411,6 +1409,7 @@ namespace GEOWALL_E
             double y1 = Convert.ToInt32(p1.valor_y);
             double x2 = Convert.ToInt32(p2.valor_x);
             double y2 = Convert.ToInt32(p2.valor_y);
+     
 
             double pendiente = (y2 - y1) / (x2 - x1);
 
@@ -1451,13 +1450,43 @@ namespace GEOWALL_E
 
             //Tangente
 
-            double M1 = (P2.valor_y - P1.valor_y) / (P2.valor_x - P1.valor_x);
-            double angulo_final = Math.Atan(M1) * 180 / Math.PI;
+            double diferencial_y_M1 = P2.valor_y - P1.valor_y;
+            double diferencial_x_M1 = P2.valor_x - P1.valor_x;
+            
 
-            double M2 = (P3.valor_y - P1.valor_y) / (P3.valor_x - P1.valor_x);
-            double angulo_inicial = Math.Atan(M2) * 180 / Math.PI;
+            double M1 = diferencial_y_M1 / diferencial_x_M1;
 
-           // double angulo_entre_tangentes = Math.Atan((M2 - M1) / 1 + M2 * M1) * 180 / Math.PI;
+            double angulo_final;
+
+            if(diferencial_y_M1 < 0 && diferencial_x_M1 > 0) 
+            {
+                angulo_final =(Math.Atan(M1) + 2*Math.PI) * 180 / Math.PI;
+            }
+            else if(diferencial_y_M1 > 0 && diferencial_x_M1 < 0)
+            {
+                angulo_final = (Math.Atan(M1) + Math.PI) * 180 / Math.PI;
+            }
+            else angulo_final = Math.Atan(M1) * 180 / Math.PI;
+
+
+            double diferencial_y_M2 = P3.valor_y - P1.valor_y;
+            double diferencial_x_M2 = P3.valor_x - P1.valor_x;
+
+            double M2 = diferencial_y_M2 / diferencial_x_M2;
+
+            double angulo_inicial;
+
+            if (diferencial_y_M2 < 0 && diferencial_x_M2 > 0)
+            {
+                angulo_inicial = (Math.Atan(M2) + 2*Math.PI) * 180 / Math.PI;
+            }
+            else if (diferencial_y_M2 > 0 && diferencial_x_M2 < 0)
+            {
+                angulo_inicial = (Math.Atan(M2) + Math.PI) * 180 / Math.PI;
+            }
+            else angulo_inicial = Math.Atan(M2) * 180 / Math.PI;
+
+            // double angulo_entre_tangentes = Math.Atan((M2 - M1) / 1 + M2 * M1) * 180 / Math.PI;
 
             double diferencia = angulo_final - angulo_inicial;
 
@@ -1470,9 +1499,9 @@ namespace GEOWALL_E
 
             //Prueba arcos
 
-            //point p(600, 400);
-            //point a(700, 300);
-            //point q(600, 700);
+            //point p;
+            //point a;
+            //point q;
             //color blue;
             //draw ray(p, a);
             //draw ray(p, q);
