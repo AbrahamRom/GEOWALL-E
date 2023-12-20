@@ -26,7 +26,7 @@ namespace GEOWALL_E.Relacionado_con_hulk.Geometria
             for (int i = 0; i < tope; i++)
             {
                 Random rd = new Random();
-                double radio = rd.Next(0, 400);
+                float radio = rd.Next(0, 100);
 
                 Punto p1 = new Punto();
                 Measure m = new Measure(radio);

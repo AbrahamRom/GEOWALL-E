@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GEOWALL_E.Relacionado_con_hulk.Geometria.Secuencias
 {
-    abstract class Sequence : Expresion
+   public abstract class Sequence : Expresion
     {
     }
 }

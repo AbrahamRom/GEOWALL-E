@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GEOWALL_E.Relacionado_con_hulk.Geometria
 {
-    class Secuencias<T> : Sequence
+   public class Secuencias<T> : Sequence
     {
         private Node<T> first;
         private Node<T> last;
